@@ -54,7 +54,7 @@ function data = ParametersInizialization()
     data.D_ext  = 0.004;        % [m] Diametro esterno della sezione circolare cava (4 mm)
     data.D_int  = 0.003;        % [m] Diametro interno, dato da D_ext - 2*t (3 mm, con spessore 0.5 mm)
     data.M      = 0.0176;       % [kg] Massa concentrata applicata a ciascuna estremità
-
+     
     % === Parametri opzionali e placeholder ===
     % Alcuni parametri, come i coefficienti termomeccanici e l'espansione termica,
     % non sono forniti nel materiale di riferimento e sono lasciati come placeholder.
@@ -62,6 +62,10 @@ function data = ParametersInizialization()
     data.CM      = NaN;         % [MPa/°C] Coefficiente termomeccanico Martensite
     data.Hcur    = NaN;         % [-] Parametro curva isteresi
     data.alpha   = NaN;         % [°C^-1] Coeff. di espansione termica
+
+    % Corrente iniziale all'interno della trave
+    data.Current = 0;           % [A] corrente per cambiare la temperatura
+
 
 end
 

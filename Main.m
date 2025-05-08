@@ -7,12 +7,8 @@ close all
 %% INPUT CORRENT
 I = 0:0.5:7.5; % input current for Transfer function computation
 
-%% PAPER PARAMETERS
-% Creo la struct con tutti i dati necessari (presi dal paper) per le
-% simulazioni
+%% STRUCT INIZIALIZATION WITH PAPER PARAMETERS
 data = ParametersInizialization();
-% Corrente all'interno della trave
-data.Current = I(1);           % [A] corrente per cambiare la temperatura
 
 %% RELATIONSHIP: Temperature and concentration
 data = ConcentrationComputation(data);
@@ -22,7 +18,7 @@ data.rho = data.ratio * data.rho_m + (1 - data.ratio) * data.rho_a;  % Resistivi
 data.E   = data.ratio * data.Em     + (1 - data.ratio) * data.Ea;    % Modulo elastico effettivo [GPa]
 
 %% TRANSFER FUNCTION COMPUTATION
-[G_free, G_forced] = TransferFunctionComputation(data);
+G = TransferFunctionComputation(data);
 
 %% CALCULATION: h coefficient
 data  = ConvectiveCoefficientComputation(data, G);
