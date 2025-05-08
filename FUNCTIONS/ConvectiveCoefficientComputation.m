@@ -23,8 +23,8 @@ function [data] = ConvectiveCoefficientComputation(data, G)
     % v = d(w)/dt → in freq: v = jω * G * Y
     % Qui stimiamo vc = media(|jω * G|) su tutte le frequenze
 
-    omega = linspace(1, 500, length(G));        % rad/s (ipotesi frequenze analizzate)
-    v_c_freq = abs(1i * omega .* G);            % |jω * G(jΩ)| 
+    omega = G.freq /2 / pi;        % rad/s (ipotesi frequenze analizzate)
+    v_c_freq = abs(1i * omega .* G.Gwy);            % |jω * G(jΩ)| 
     v_c = mean(v_c_freq);                       % velocità caratteristica media [m/s]
 
     % === Numeri adimensionali ===
@@ -33,7 +33,7 @@ function [data] = ConvectiveCoefficientComputation(data, G)
 
     % === Nusselt number con la correlazione per cilindro trasversale ===
     Nu = 0.3 + ...
-        (0.62 * Re^0.5 * Pr^(1/3)) / ...
+        (0.62 * Re^(0.5) * Pr^(1/3)) / ...
         (1 + (0.4 / Pr)^(2/3))^(1/4) * ...
         (1 + (Re / 282000)^(5/8))^(4/5);
 

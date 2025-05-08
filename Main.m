@@ -27,9 +27,14 @@ data  = ConvectiveCoefficientComputation(data, G);
 %% RELATIONSHIP: i Current and Temperature
 data = PowerBalance(data);
 
+%% inizializzazione variabili risultati
+GSY_values = zeros(length(I), 1);  % Array per salvare G_SY
+GWY_values = zeros(length(I), 1);  % Array per salvare G_WY
+
 %% CALCULATION: Transfer Function in dependence of i (current)
 
 for ii = 1:length(I)
+    
     % estabilished current value
     data.Current = Current(ii);
 
@@ -48,11 +53,18 @@ for ii = 1:length(I)
     % TRANSFER FUNCTION COMPUTATION
     G = TransferFunctionComputation(data);
 
+    % MEMORIZZA I VALORI DI G_SY E G_WY
+    GSY_values(ii) = G.Gsy;   % Salva il valore di G_SY per la corrente corrente
+    GWY_values(ii) = G.Gwy;   % Salva il valore di G_WY per la corrente corrente
+
+
 end
 
-%% COMPUTATION: Shaker Signal
 
-%% PLOT Transfer Function
+%% PLOT FRF
+GPlot(G.freq, I, GSY_values, GWY_values)
+
+%% COMPUTATION: Shaker Signal
 
 %% PLOT Shaker Signal
 
