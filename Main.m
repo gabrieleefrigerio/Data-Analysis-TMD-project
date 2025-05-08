@@ -13,9 +13,10 @@ data = ParametersInizialization();
 %% RELATIONSHIP: Temperature and concentration
 data = ConcentrationComputation(data);
 
-%% COMPUTATION: Young Modulus and resistivity
+%% COMPUTATION: Young Modulus and resistivity and damping
 data.rho = data.ratio * data.rho_m + (1 - data.ratio) * data.rho_a;  % Resistività effettiva [Ohm·m]
-data.E   = data.ratio * data.Em     + (1 - data.ratio) * data.Ea;    % Modulo elastico effettivo [GPa]
+data.E   = data.ratio * data.Em + (1 - data.ratio) * data.Ea;    % Modulo elastico effettivo [GPa]
+data.xi1 =  data.ratio * data.xi1_m + (1 - data.ratio) * data.xi1_a;    % Coefficiente di damping adimensionale effettivo []
 
 %% TRANSFER FUNCTION COMPUTATION
 G = TransferFunctionComputation(data);
@@ -29,8 +30,23 @@ data = PowerBalance(data);
 %% CALCULATION: Transfer Function in dependence of i (current)
 
 for ii = 1:length(I)
-    
+    % estabilished current value
     data.Current = Current(ii);
+
+    % calculate temperature value
+    data = PowerBalance(data);
+
+    % calculate Martensite concentration
+    data = ConcentrationComputation(data);
+
+    % computation: Young Modulus and resistivity and damping
+    data.rho = data.ratio * data.rho_m + (1 - data.ratio) * data.rho_a;  % Resistività effettiva [Ohm·m]
+    data.E   = data.ratio * data.Em     + (1 - data.ratio) * data.Ea;    % Modulo elastico effettivo [GPa]
+    data.xsi1 =  data.ratio * data.xi1_m + (1 - data.ratio) * data.xi1_a;    % Coefficiente di damping adimensionale effettivo []
+
+
+    % TRANSFER FUNCTION COMPUTATION
+    G = TransferFunctionComputation(data);
 
 end
 
