@@ -31,6 +31,8 @@ function data = ParametersInizialization()
     data.rho_m   = 90e-8;       % [Ohm·m] Resistività Martensite
     data.rho_a   = 100e-8;      % [Ohm·m] Resistività Austenite
 
+    data.theta_m = 6450;        % [Kg/m^3] Densità del materiale
+
     data.xi1_m = 1.22e-2;       % [-] Smorzamento Martensite
     data.xi1_a = 0.90e-2;       % [-] Smorzamento Austenite
 
@@ -50,7 +52,7 @@ function data = ParametersInizialization()
     % === Proprietà geometriche della trave SMA (NiTiNOL) ===
     % Inizializzazione delle proprietà geometriche della trave SMA,
     % inclusi la lunghezza, i diametri e la massa concentrata.
-    data.L      = 0.14;         % [m] Lunghezza della trave (140 mm)
+    data.L      = 0.140;         % [m] Lunghezza della trave (140 mm)
     data.D_ext  = 0.004;        % [m] Diametro esterno della sezione circolare cava (4 mm)
     data.D_int  = 0.003;        % [m] Diametro interno, dato da D_ext - 2*t (3 mm, con spessore 0.5 mm)
     data.M      = 0.0176;       % [kg] Massa concentrata applicata a ciascuna estremità
