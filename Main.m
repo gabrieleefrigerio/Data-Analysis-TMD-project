@@ -1,8 +1,10 @@
+%% SMA TMD PROJECT MAIN
+
 clc
 clear variables
 close all
 
-%% SMA TMD PROJECT MAIN
+
 
 %% INPUT CORRENT
 I = 0:0.5:7.5; % input current for Transfer function computation
@@ -64,9 +66,6 @@ end
 %% PLOT FRF
 GPlot(G.freq, I, GSY_values, GWY_values)
 
-%% COMPUTATION: Shaker Signal
-
-%% PLOT Shaker Signal
 
 %% EXPORT Transfer Function
 
