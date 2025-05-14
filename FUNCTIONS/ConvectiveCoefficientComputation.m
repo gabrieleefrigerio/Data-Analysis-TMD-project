@@ -23,9 +23,41 @@ function [data] = ConvectiveCoefficientComputation(data, G)
     % v = d(w)/dt → in freq: v = jω * G * Y
     % Qui stimiamo vc = media(|jω * G|) su tutte le frequenze
 
-    omega = G.freq /2 / pi;        % rad/s (ipotesi frequenze analizzate)
-    v_c_freq = abs(1i * omega .* G.Gwy);            % |jω * G(jΩ)| 
-    v_c = mean(v_c_freq);                       % velocità caratteristica media [m/s]
+    omega = G.omega;        % rad/s (ipotesi frequenze analizzate)
+    
+    load("White_Noise_4_450_Hz.mat");
+
+    
+    Y_fft = fft(Signal_filtred);           % FFT di y(t)
+    
+
+    % Calcolo v in frequenza
+    V_fft = 1i * omega .* G.Gwy .* Y_fft;
+
+    % Passaggio nel dominio del tempo
+    v_xt_T = ifft(V_fft);    % velocità v(x,t,T)
+    % v_xt_T = real(ifft(V_fft)); oppure uso questo
+
+    % Definizione dominio spazio-temporale
+    L = data.L;               % lunghezza [m]
+    
+    load("time.mat");
+    t_max = t(end);           % durata [s]
+    Nx = 10000;              % punti spaziali
+    Nt = length(t);             % punti temporali
+    
+    x = linspace(0, L, Nx);
+    t = linspace(0, t_max, Nt);
+    dx = x(2) - x(1);
+    dt = t(2) - t(1);
+
+    % Media temporale in ogni punto spaziale
+    v_x_avgT = trapz(v_xt_T, 2) * dt / Tmax;    % risultato: Nx x 1
+
+    % Media spaziale → v(T)
+    v_T = trapz(v_x_avgT) * dx / L;
+    % scalare
+    v_c = v_T;
 
     % === Numeri adimensionali ===
     Re = rho_a * v_c * D_h / mu;                  % Reynolds number

@@ -18,11 +18,13 @@ function G = TransferFunctionComputation(data)
     J = (pi / 64) * (D_ext^4 - D_int^4);   
 
     %% === Frequenze di calcolo ===
-    fmax = 700;                              % Frequenza massima [Hz]
-    n_points = 10000;                       % Numero di punti in frequenza
-    freq = linspace(0, fmax, n_points);     % Vettore frequenze [Hz]
-    omega = 2 * pi * freq;                  % Frequenze angolari [rad/s]
-    
+    f_max = 700;               % Frequenza massima [Hz]
+    load("time.mat"); 
+    n_points = length(t); % Numero di punti 
+    freq = linspace(0, f_max, n_points);     % Vettore di frequenze in Hz (0 -> f_max)
+    omega = 2 * pi * freq;            % Vettore di pulsazioni in rad/s
+
+
     %% === Calcolo del determinante della matrice e frequenze naturali ===
     dets = MatrixDeterminant(omega, density, A, E, J, M_a, L);        
     [i_nat, G] = NaturalFrequencyComputation(dets, freq);       
@@ -53,6 +55,10 @@ function G = TransferFunctionComputation(data)
     %% === Calcolo delle FRF: G_WY e G_SY ===
     [phi_at_xj, G] = GwyComputation(omega, i_nat, modes_shapes, x, pos_xj, modal_mass, xsi, density, A, M_a, G);
     G = GsyComputation(omega, i_nat, modes_shapes, modal_mass, xsi, phi_at_xj, G, E, J, x, pos_xj, density, A, M_a);
+
+    %% === SALVO I VETTORI DI FREQ E OMEGA ===
+    G.freq = freq;
+    G.omega = omega;
     
     %% === Plot finale ===
     GPlotSingle(freq, G);  % Visualizzazione risultati
