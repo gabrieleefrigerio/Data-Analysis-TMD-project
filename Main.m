@@ -14,7 +14,7 @@ data = ParametersInizialization();
 
 %% RELATIONSHIP: Temperature and concentration
 data = ConcentrationComputation(data);
-
+data.ratio = 1;
 %% COMPUTATION: Young Modulus and resistivity and damping
 data.rho = data.ratio * data.rho_m + (1 - data.ratio) * data.rho_a;  % Resistività effettiva [Ohm·m]
 data.E   = data.ratio * data.Em + (1 - data.ratio) * data.Ea;    % Modulo elastico effettivo [GPa]

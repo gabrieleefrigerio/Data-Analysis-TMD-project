@@ -18,10 +18,12 @@ function G = TransferFunctionComputation(data)
     J = (pi / 64) * (D_ext^4 - D_int^4);   
 
     %% === Frequenze di calcolo ===
-    f_max = 700;               % Frequenza massima [Hz]
+    f_max = 1024;               % Frequenza massima [Hz]
     load("time.mat"); 
-    n_points = length(t); % Numero di punti 
-    freq = linspace(0, f_max, n_points);     % Vettore di frequenze in Hz (0 -> f_max)
+    df = 1/((t(end)-t(1)));
+    freq = 0:df:f_max;
+    n_points = length(freq);
+    %freq = linspace(0, f_max, n_points);     % Vettore di frequenze in Hz (0 -> f_max)
     omega = 2 * pi * freq;            % Vettore di pulsazioni in rad/s
 
 
