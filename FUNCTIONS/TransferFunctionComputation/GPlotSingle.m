@@ -17,7 +17,7 @@ function GPlotSingle(freq, G)
 
     % === G_WY - Ampiezza ===
     figure('Color','w','WindowStyle','docked');  % Crea nuova figura ancorata
-    plot(freq, abs(G.Gwy), 'b', 'LineWidth', 1.6);  % Traccia il modulo (ampiezza)
+    semilogy(freq, abs(G.Gwy), 'b', 'LineWidth', 1.6);  % Traccia il modulo (ampiezza)
     grid on;
     xlabel('Frequenza [Hz]');
     ylabel('|G_{WY}|');
@@ -33,7 +33,7 @@ function GPlotSingle(freq, G)
 
     % === G_SY - Ampiezza ===
     figure('Color','w','WindowStyle','docked');
-    plot(freq, abs(G.Gsy), 'r', 'LineWidth', 1.6);  % Modulo sperimentale
+    semilogy(freq, abs(G.Gsy), 'r', 'LineWidth', 1.6);  % Modulo sperimentale
     grid on;
     xlabel('Frequenza [Hz]');
     ylabel('|G_{SY}|');

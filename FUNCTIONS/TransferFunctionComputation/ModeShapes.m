@@ -42,10 +42,10 @@ function [x, modes_shapes] = ModeShapes(L, n_points, i_nat, omega, density, A, E
     % L'animazione qui sotto visualizza l'evoluzione temporale della deformazione modale
     % (Attualmente commentata, decommenta per attivarla)
     
-    % mode = 1;  % Seleziona il primo modo da animare
+    % mode = 2;  % Seleziona il primo modo da animare
     % freq = omega / (2*pi);  % Conversione da rad/s a Hz
     % colors_p = lines(length(i_nat));  % Genera palette di colori
-    
+    % 
     % % Creazione della figura e preparazione al plot
     % figure('Position', [100, 100, 1200, 500]); 
     % hold on; grid on;
@@ -55,13 +55,13 @@ function [x, modes_shapes] = ModeShapes(L, n_points, i_nat, omega, density, A, E
     % xlabel('Posizione [m]')
     % ylabel('Deformazione (modale)')
     % ylim([-1, 1] * max(abs(modes_shapes(mode,:))) * 1.1)  % Imposta i limiti dell’asse y
-
+    % 
     % % Parametri animazione
     % T = 1 / freq(i_nat(mode));   % Periodo del modo selezionato
     % n_cycles = 4;                % Numero di cicli da visualizzare
     % n_frames = 1000;             % Numero totale di frame
     % t = linspace(0, n_cycles*T, n_frames);  % Vettore temporale
-
+    % 
     % % Loop di animazione
     % for k = 1:length(t)
     %     if ishandle(h1)

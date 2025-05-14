@@ -4,26 +4,24 @@ function G = TransferFunctionComputation(data)
     % a sbalzo con massa concentrata in punta, tramite metodo modale.
     
     %% === Parametri geometrici e materiali ===
-    density  = data.theta_m;             % Densità materiale [kg/m^3]
-    L     = data.L;               % Lunghezza della trave [m]
-    E     = data.E * 1e9;        % Modulo di Young [Pa]
-    D_ext = data.D_ext;           % Diametro esterno [m]
-    D_int = data.D_int;           % Diametro interno [m]
-    M_a   = data.M;               % Massa concentrata in punta [kg]
-    xsi = data.xi1;               % Smorzamento critico
+    density  = data.theta_m;                % Densità materiale [kg/m^3]
+    L     = data.L;                         % Lunghezza della trave [m]
+    E     = data.E * 1e9;                   % Modulo di Young [Pa]
+    D_ext = data.D_ext;                     % Diametro esterno [m]
+    D_int = data.D_int;                     % Diametro interno [m]
+    M_a   = data.M;                         % Massa concentrata in punta [kg]
+    xsi = data.xi1;                         % Smorzamento critico
 
 
     % Area e momento d'inerzia della sezione trasversale
     A = (pi / 4) * (D_ext^2 - D_int^2);         
     J = (pi / 64) * (D_ext^4 - D_int^4);   
 
-    m = density * A;              % Massa della Trave
-    
     %% === Frequenze di calcolo ===
-    fmax = 80;                              % Frequenza massima [Hz]
+    fmax = 700;                              % Frequenza massima [Hz]
     n_points = 10000;                       % Numero di punti in frequenza
-    freq = linspace(0, fmax, n_points);    % Vettore frequenze [Hz]
-    omega = 2 * pi * freq;                 % Frequenze angolari [rad/s]
+    freq = linspace(0, fmax, n_points);     % Vettore frequenze [Hz]
+    omega = 2 * pi * freq;                  % Frequenze angolari [rad/s]
     
     %% === Calcolo del determinante della matrice e frequenze naturali ===
     dets = MatrixDeterminant(omega, density, A, E, J, M_a, L);        
@@ -37,7 +35,7 @@ function G = TransferFunctionComputation(data)
     
     %% === Definizione posizione forza e sensore ===
     xj = data.L;  % Posizione accelerometro [m]
-    xk = 0;  % Posizione applicazione forza [m]
+
     [~, pos_xj] = min(abs(x - xj));  
     
     %% === Calcolo massa modale ===
