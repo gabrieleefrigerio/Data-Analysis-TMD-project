@@ -10,12 +10,12 @@ Current = [0 2 5 5.8:0.1:6.3 7];
 %% STRUCT INIZIALIZATION WITH PAPER PARAMETERS
 data = ParametersInizialization();
 
-data.T = 25;                % [°C] Temperatura Tmd iniziale
+% [°C] Temperatura Tmd iniziale
+data.T = 25;                
 
 
 %% CALCULATION: Transfer Function in dependence of i (current)
 flag = 0;
-
 for ii = 1:length(Current)
     if ii == 1
         % calculate Martensite concentration
