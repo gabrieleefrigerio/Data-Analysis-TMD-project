@@ -1,4 +1,4 @@
-function G = TransferFunctionComputation(data)
+function G = TransferFunctionComputation(data,multi)
     %TRANSFERFUNCTIONCOMPUTATION Calcola le funzioni di trasferimento (FRF),
     % le frequenze naturali e le forme modali di una trave cilindrica cava
     % a sbalzo con massa concentrata in punta, tramite metodo modale.
@@ -55,12 +55,19 @@ function G = TransferFunctionComputation(data)
     end
 
     %% === Calcolo delle FRF: G_WY e G_SY ===
-    [phi_at_xj, G] = GwyComputation(omega, i_nat, modes_shapes, x, pos_xj, modal_mass, xsi, density, A, M_a, G);
+    if multi
+        [phi_at_all_x, G] = GwyMultiComputation(omega, i_nat, modes_shapes, x, modal_mass, xsi, density, A, M_a, G);
+        phi_at_xj = phi_at_all_x(:,pos_xj);
+    else
+        [phi_at_xj, G] = GwySingleComputation(omega, i_nat, modes_shapes, x, pos_xj, modal_mass, xsi, density, A, M_a, G);
+    end
+
     G = GsyComputation(omega, i_nat, modes_shapes, modal_mass, xsi, phi_at_xj, G, E, J, x, pos_xj, density, A, M_a);
 
     %% === SALVO I VETTORI DI FREQ E OMEGA ===
     G.freq = freq;
     G.omega = omega;
+    G.x = x;
     
     %% === Plot finale ===
     GPlotSingle(freq, G);  % Visualizzazione risultati

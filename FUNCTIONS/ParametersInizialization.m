@@ -36,6 +36,9 @@ function data = ParametersInizialization()
     data.xi1_m = 1.22e-2;       % [-] Smorzamento Martensite
     data.xi1_a = 0.90e-2;       % [-] Smorzamento Austenite
 
+    data.h_a = 8.088653;         % [W/(m^2*K)] coeff scambio convettivo Austenite   
+    data.h_m = 8.384180;         % [W/(m^2*K)] coeff scambio convettivo Martensite 
+
     data.T = 25;                % [°C] Temperatura Tmd iniziale
     data.T_prev = data.T;       % [°C] Temperatura Tmd precedente
 

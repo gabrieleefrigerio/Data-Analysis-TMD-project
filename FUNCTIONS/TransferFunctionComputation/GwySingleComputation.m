@@ -1,4 +1,4 @@
-function [phi_at_xj, G] = GwyComputation(omega, i_nat, modes_shapes, x, pos_xj, modal_mass, xsi, density, A, M_a, G)
+function [phi_at_xj, G] = GwySingleComputation(omega, i_nat, modes_shapes, x, pos_xj, modal_mass, xsi, density, A, M_a, G)
 % GWYCOMPUTATION Calcola la funzione di trasferimento teorica G_WY (acceleration FRF).
 %
 % Questa funzione stima la risposta in accelerazione (funzione di trasferimento teorica) 
@@ -68,5 +68,3 @@ function [phi_at_xj, G] = GwyComputation(omega, i_nat, modes_shapes, x, pos_xj, 
     G.Gwy_amp = abs(G_FRF_theory);       % Ampiezza (modulo)
     G.Gwy_phase = angle(G_FRF_theory);   % Fase (argomento)
 end
-
-

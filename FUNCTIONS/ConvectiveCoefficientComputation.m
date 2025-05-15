@@ -35,25 +35,23 @@ function [data] = ConvectiveCoefficientComputation(data, G)
 
     % Calcolo della velocità nel dominio della frequenza:
     % v(ω) = jω * G(ω) * Y(ω)
-    V_fft = 1i * G.omega .* G.Gwy .* Y_fft;  % parte reale della velocità
-    
-    % Forza V_fft colonna
-    V_fft = V_fft(:);
+    % V_fft = 1i * G.omega.' .* G.Gwy .* Y_fft;  % parte reale della velocità
+    V_fft = 1i * (G.omega .* Y_fft) .* G.Gwy;
     
     % === Calcolo N ===
     N = 2 * (length(V_fft) - 1);
     
     % === Denormalizza ===
     V_half = V_fft;
-    V_half(2:end-1) = V_half(2:end-1) * (N / 2);
+    V_half(2:end-1,:) = V_half(2:end-1,:) /  2;
     
     % === Ricostruzione spettro completo ===
-    V_full = [V_half; conj(flipud(V_half(2:end-1)))];
+    V_full = [conj(flipud(V_half(2:end-1,:))); V_half];
     
     % === Frequenze ===
     fs = f_samp;  % metti il tuo valore reale se lo conosci
     f_fft = linspace(0, fs/2, length(V_fft));  % frequenze positive (unilaterale)
-    f_full = linspace(0, fs, N);               % spettro completo
+    f_full = linspace(-freq_vec(end), freq_vec(end), N);               % spettro completo
     
     % % === Plot ===
     % figure;
@@ -70,29 +68,23 @@ function [data] = ConvectiveCoefficientComputation(data, G)
     % ylabel('Ampiezza');
     % legend;
     % grid on;
-    % 
+
+    %figure; semilogy(f_full, abs(V_full)); hold on; semilogy(freq_vec, abs(V_fft));
 
     % Trasformazione nel dominio del tempo → v(x,t,T)
     v_xt_T = real(ifft(V_full));  % Ricostruzione temporale della velocità [m/s]
 
     %% === 4. Definizione del dominio spazio-temporale ===
     L = data.L;                  % Lunghezza del cilindro [m]
-    Nx = 10000;                  % Numero di punti spaziali
-    Nt = length(t);             % Numero di punti temporali
-
-    x = linspace(0, L, Nx);     % Coordinata spaziale
-    t = linspace(0, t_max, Nt); % Coordinata temporale
-
-    dx = x(2) - x(1);           % Passo spaziale
-    dt = t(2) - t(1);           % Passo temporale
-
+    t_trapz = linspace(0,t(end), N);
+    x = G.x;
     %% === 5. Calcolo della velocità media caratteristica v_c ===
 
     % Media temporale della velocità in ogni punto spaziale (integrale temporale)
-    v_x_avgT = trapz(v_xt_T, 2) * dt / t_max;  % vettore Nx x 1
+    v_x_avgT = trapz(t_trapz,v_xt_T) / t_max;  % vettore Nx x 1
 
     % Media spaziale della velocità media → stima finale della velocità caratteristica
-    v_T = trapz(v_x_avgT) * dx / L;  % scalare
+    v_T = trapz(x, v_x_avgT) / L;  % scalare
     v_c = v_T;
 
     %% === 6. Calcolo dei numeri adimensionali ===
@@ -110,7 +102,7 @@ function [data] = ConvectiveCoefficientComputation(data, G)
     h = Nu * k_air / D_h;  % Coefficiente di scambio termico [W/(m^2·K)]
 
     %% === 9. Salvataggio del risultato ===
-    data.h = h  % Salva h nella struttura di output
+    data.h = h;  % Salva h nella struttura di output
 end
 
 
