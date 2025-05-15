@@ -70,7 +70,7 @@ function G = TransferFunctionComputation(data,multi)
     G.x = x;
     
     %% === Plot finale ===
-    GPlotSingle(freq, G);  % Visualizzazione risultati
+    % GPlotSingle(freq, G);  % Visualizzazione risultati
 end
 
 

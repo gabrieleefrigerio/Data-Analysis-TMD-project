@@ -26,8 +26,8 @@ function [i_nat, G] = NaturalFrequencyComputation(dets, freq)
     G.freq_nat = freq(i_nat);
 
     % Output delle frequenze naturali trovate
-    fprintf('Frequenze naturali [Hz]:\n');
-    disp(freq(i_nat));
+    % fprintf('Frequenze naturali [Hz]:\n');
+    % disp(freq(i_nat));
 
     % --- (Facoltativo) Plot del determinante e delle frequenze naturali ---
     %{
