@@ -43,7 +43,7 @@ function [phi_at_all_x, G] = GwyMultiComputation(omega, i_nat, modes_shapes, x, 
         w = omega(k);  % Frequenza attuale
 
         % Ciclo su ogni punto spaziale xj
-        parfor j = 1:n_points
+        for j = 1:n_points
             sum_modes = 0;
 
             for i = 1:n_modes
