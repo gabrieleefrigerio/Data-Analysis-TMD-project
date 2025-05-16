@@ -39,3 +39,11 @@ disp(" ------- SCAMBIO CONVETTIVO MARTENSITE [W/(m^2*K)]-------");
 disp(data.h_m);
 disp(" ------- SCAMBIO CONVETTIVO AUSTENITE [W/(m^2*K)]-------");
 disp(data.h_a);
+
+%% RISULTATI TROVATI
+
+ % ------- SCAMBIO CONVETTIVO MARTENSITE [W/(m^2*K)]-------
+ %    8.3846
+ % 
+ % ------- SCAMBIO CONVETTIVO AUSTENITE [W/(m^2*K)]-------
+ %    8.0887
