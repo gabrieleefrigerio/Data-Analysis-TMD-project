@@ -12,6 +12,7 @@ ratios = [0 1];
 data = ParametersInizialization();
 
 for ii =1:length(ratios)
+    tic;
     %% DEFINE: Martensite ratio
     data.ratio = ratios(ii);
     %% COMPUTATION: Young Modulus and resistivity and damping
@@ -29,6 +30,8 @@ for ii =1:length(ratios)
     else
         data.h_a = data.h; % coef scambio convettivo austenite
     end
+
+    toc;
 end
 
 %% DISP RISULTATI
