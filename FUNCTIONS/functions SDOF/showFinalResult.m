@@ -9,21 +9,20 @@ function showFinalResult(allParams, f_range, FRF_range, accIndex, acqNumber)
     % Calcolo G_total e salvataggio parametri modali
     for i = 1:size(allParams, 1)
         p = allParams(i, :);
+        params = p;
         A = p(3);
-        G_total = G_total + A ./ (-omega_vec.^2 + 2j * p(2) * p(1) * omega_vec + p(1)^2);
-        modes(i, :) = {p(1)/(2*pi), p(2), p(1), p(3), p(4), p(5)};
+        G_total = G_total + (params(1) + 1i * params(2)) ./ (1i*omega_vec - (params(3) + 1i * params(4))) + (params(1) - 1i * params(2)) ./ (1i*omega_vec - (params(3) - 1i * params(4)));
     end
-    G_total = G_total + allParams(1, 5)./omega_vec.^2;
-
+    G_total = G_total + 0.89;
     % Ottimizza residui e aggiorna G_total
-    [G_total, allParams, modes] = ottimizzaResidui(G_total, allParams, FRF_range, omega_vec, modes);
+    %[G_total, allParams, modes] = ottimizzaResidui(G_total, allParams, FRF_range, omega_vec, modes);
 
     % Tabella a sinistra
-    modeTable = cell2table(modes, 'VariableNames', {'Frequenza (Hz)', 'Damping (xi)', 'omega0', 'A', 'Rh', 'Rl'});
-    uitable(figFinal, 'Units', 'normalized', ...
-        'Position', [0.05 0.15 0.20 0.75], ...
-        'Data', modeTable{:,:}, ...
-        'ColumnName', modeTable.Properties.VariableNames);
+    % modeTable = cell2table(modes, 'VariableNames', {'Frequenza (Hz)', 'Damping (xi)', 'omega0', 'A', 'Rh', 'Rl'});
+    % uitable(figFinal, 'Units', 'normalized', ...
+    %     'Position', [0.05 0.15 0.20 0.75], ...
+    %     'Data', modeTable{:,:}, ...
+    %     'ColumnName', modeTable.Properties.VariableNames);
 
     % Grafico ampiezza
     axAmplitude = axes(figFinal, 'Units', 'normalized', 'Position', [0.35 0.55 0.6 0.4]);
@@ -52,23 +51,13 @@ function showFinalResult(allParams, f_range, FRF_range, accIndex, acqNumber)
 
     %% OTTIMIZZAZIONE RESIDUI FINALE
     function [G_total, allParams, modes] = ottimizzaResidui(G_total, allParams, FRF_range, omega_vec, modes)
-        G_base = zeros(size(omega_vec));
-        for i = 1:size(allParams,1)
-            p = allParams(i,:);
-            A = p(3);
-            G_base = G_base + A ./ (-omega_vec.^2 + 2j*p(2)*p(1)*omega_vec + p(1)^2);
-        end
-        G_base = G_base + allParams(1,5)./omega_vec.^2;
-        G_base = G_base.';
+
     
-        r0 = allParams(end,4);
+        r0 = 0;
         opts = optimoptions('lsqnonlin', 'Display', 'iter', 'TolFun',1e-12, 'TolX',1e-12);
-        obj = @(res) sum(real(G_base + res - FRF_range).^2 + imag(G_base + res - FRF_range).^2);
+        obj = @(res) sum(real(G_total + res - FRF_range).^2 + imag(G_total + res - FRF_range).^2);
         res_ottimizzati = lsqnonlin(obj, r0, [], [], opts);
-    
-        allParams(end,4) = res_ottimizzati;
-        modes(end,5) = {res_ottimizzati};
-        G_total = G_base + res_ottimizzati;
+        G_total = G_total + res_ottimizzati;
     end
 
 %% EXPORT DATA

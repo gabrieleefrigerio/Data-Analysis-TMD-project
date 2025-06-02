@@ -18,10 +18,10 @@ function [modal_results] = stabilization_diagram(IRF, K, max_order, FRF)
 
     figure; hold on;
 
-    % Plot FRF on left y-axis (log scale)
-    yyaxis left
-    semilogy(FRF.freq, FRF.FRF, 'b-', 'LineWidth', 2);
-    ylabel('FRF magnitude');
+    % % Plot FRF on left y-axis (log scale)
+    % yyaxis left
+    % semilogy(FRF.freq, FRF.FRF, 'b-', 'LineWidth', 2);
+    % ylabel('FRF magnitude');
 
     % Extract IRF data dimensions
     h = IRF.irf;  % Nt x nChan x nAcq
@@ -177,48 +177,48 @@ function [modal_results] = stabilization_diagram(IRF, K, max_order, FRF)
         end
     end
 
-    %% Modal Assurance Criterion (MAC) Filtering
-
-    stable_freqs_mac_filtered = [];
-
-    for i = 1:length(stable_freqs_filtered)
-        f = stable_freqs_filtered(i);
-
-        % Find nearest frequency bin
-        [~, idx] = min(abs(bin_centers - f));
-
-        % Reference mode shape for this frequency
-        phi_ref = all_modes{end}{idx};
-        if isempty(phi_ref)
-            continue;
-        end
-
-        macs = [];
-
-        % Compare mode shape with neighbors within ±0.05% frequency
-        freq_bin_width = 0.001 * f / 2;
-        for j = 1:length(bin_centers)
-            fj = bin_centers(j);
-            if abs(fj - f) <= freq_bin_width
-                phi = all_modes{end}{j};
-                if isempty(phi)
-                    continue;
-                end
-
-                % Calculate MAC value
-                mac = abs(phi_ref' * phi)^2 / ((phi_ref' * phi_ref) * (phi' * phi));
-                macs(end+1) = mac;
-            end
-        end
-
-        % Keep frequency if MAC ≥ 0.8 with any neighbor
-        if any(macs >= 0.8)
-            stable_freqs_mac_filtered(end+1, 1) = f; %#ok<AGROW>
-        end
-    end
+    % %% Modal Assurance Criterion (MAC) Filtering
+    % 
+    % stable_freqs_mac_filtered = [];
+    % 
+    % for i = 1:length(stable_freqs_filtered)
+    %     f = stable_freqs_filtered(i);
+    % 
+    %     % Find nearest frequency bin
+    %     [~, idx] = min(abs(bin_centers - f));
+    % 
+    %     % Reference mode shape for this frequency
+    %     phi_ref = all_modes{end}{idx};
+    %     if isempty(phi_ref)
+    %         continue;
+    %     end
+    % 
+    %     macs = [];
+    % 
+    %     % Compare mode shape with neighbors within ±0.05% frequency
+    %     freq_bin_width = 0.001 * f / 2;
+    %     for j = 1:length(bin_centers)
+    %         fj = bin_centers(j);
+    %         if abs(fj - f) <= freq_bin_width
+    %             phi = all_modes{end}{j};
+    %             if isempty(phi)
+    %                 continue;
+    %             end
+    % 
+    %             % % Calculate MAC value
+    %             % mac = abs(phi_ref' * phi)^2 / ((phi_ref' * phi_ref) * (phi' * phi));
+    %             % macs(end+1) = mac;
+    %         end
+    %     end
+    % 
+    %     % % Keep frequency if MAC ≥ 0.8 with any neighbor
+    %     % if any(macs >= 0.8)
+    %     %     stable_freqs_mac_filtered(end+1, 1) = f; %#ok<AGROW>
+    %     % end
+    % end
 
     %% Extract selected modes and poles corresponding to stable frequencies
-
+    stable_freqs_mac_filtered = stable_freqs_filtered;
     ref_modes = all_modes{end};
     ref_poles = s;  % poles from last iteration
 
@@ -235,6 +235,12 @@ function [modal_results] = stabilization_diagram(IRF, K, max_order, FRF)
             selected_poles(end+1, 1) = ref_poles(idx);
         end
     end
+    % Rimuovi le frequenze zero e i corrispondenti dati
+    nonzero_idx = stable_freqs_mac_filtered > 0;
+    
+    stable_freqs_mac_filtered = stable_freqs_mac_filtered(nonzero_idx);
+    selected_poles = selected_poles(nonzero_idx);
+    selected_modes = selected_modes(nonzero_idx);
 
     % Package modal results in output struct
     modal_results = struct;

@@ -55,9 +55,12 @@ for i = 1:length(field_names)
     [Gyy, ~] = autocross_lab(Force_time, Force_time, fsamp, SecPoints, N_OL, Win);
     [Gxx, ~] = autocross_lab(Acc_time, Acc_time, fsamp, SecPoints, N_OL, Win);
     
-    omega = frq/(2*pi);
-    H1 = ((Gxy.*(-(omega').^2)) ./ Gxx)- 0.4;
-    H2 = (Gxy.*(-(omega').^2)) ./ Gyy;
+    omega = (frq/(2*pi))';
+    %H1 = ((Gxy+0.88).*(-(omega).^2) ./ Gxx);
+
+
+    H1 = (Gxy./ Gxx)+0.88;
+    H2 = (Gxy) ./ Gyy;
     %gamma2 = abs(Gxy).^2 ./ (Gxx .* Gyy);
     gamma2 = abs(Gxy).^2 ./ (Gxx .* Gyy);
 
@@ -206,7 +209,7 @@ if ~exist(output_folder, 'dir')
 end
 
 % Filtro frequenze <= 600 Hz
-freq_cut_idx = frq>=4 & frq <= 600;
+freq_cut_idx = frq <= 600;
 frq = frq(freq_cut_idx);  % Sovrascrive con versione tagliata
 
 % Itera su ciascun campo della struttura H1_tot
