@@ -42,19 +42,18 @@ modal_results = stabilization_diagram(IRF, kEnd, max_order, FRF);
 %%
 
 modal_results.modal_mass = find_modal_mass(FRF, modal_results);
-freq = 0:0.05:600;
+freq = FRF.freq;
 omega_vec = freq*2*pi;
 FRF_fitted = zeros(length(omega_vec), 1)';
 for ii = 1:length(modal_results.eigenfreq)
     FRF_fitted = FRF_fitted + (modal_results.modes(ii)*modal_results.modes(ii))./(modal_results.modal_mass(ii).*(-omega_vec.^2 + 2j*modal_results.damping(ii)*(modal_results.eigenfreq(ii)*2*pi).*omega_vec + (modal_results.eigenfreq(ii)*2*pi)^2));
 end
 figure;
-semilogy(freq, abs(FRF_fitted), 'r--', ...     % rosso tratteggiato
-         freq, abs(FRF.FRF), 'b-');            % blu continuo
+semilogy(freq, abs(FRF_fitted), 'r--', freq, abs(FRF.FRF), 'b-');            
 xlabel('Frequenza [Hz]');
 ylabel('|FRF|');
-legend('FRF fitted (modale)', 'FRF reale (misurata)');
+legend('fitted FRF', 'experimental FRF');
 grid on;
 
 
-if ~exist('ibrahim_results', 'dir'), mkdir('ibrahim_results'); end; save('ibrahim_results/modal_results_I9.mat', 'modal_results');
+if ~exist('ibrahim_results', 'dir'), mkdir('ibrahim_results'); end; save('ibrahim_results/modal_results_I0.mat', 'modal_results');

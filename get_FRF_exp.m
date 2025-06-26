@@ -60,6 +60,7 @@ for i = 1:length(field_names)
 
 
     H1 = (Gxy./ Gxx)+0.88;
+    H1 = movmean(H1, 10);
     H2 = (Gxy) ./ Gyy;
     %gamma2 = abs(Gxy).^2 ./ (Gxx .* Gyy);
     gamma2 = abs(Gxy).^2 ./ (Gxx .* Gyy);
@@ -158,46 +159,42 @@ for i = 1:length(field_names)
     plot(frq(valid_idx), coherence_tot.(field_names{i})(valid_idx));
 end
 
-%% ========== PLOT COMPLETO LOG-SCALE ==========
-
+% ========== PLOT COMPLETO LOG-SCALE CON COLORI UNIFORMI ==========
 figure('Name', 'FRF Completa - Scala logaritmica', 'Position', [50 50 1200 800]);
 tiledlayout(3,1);
 
-% Modulo in scala logaritmica
-nexttile;
-hold on; grid on; grid minor;
+% Definisci una mappa dei colori per ciascun field_name
+colors = lines(length(field_names));
+
+% Modulo
+nexttile; hold on; grid on; grid minor;
 title('Modulo |FRF| - Banda Completa');
-xlabel('Frequenza [Hz]');
-ylabel('|H1| [N/m]');
+xlabel('Frequenza [Hz]'); ylabel('|H1| [N/m]');
 set(gca, 'YScale', 'log');
 for i = 1:length(field_names)
     valid_idx = frq > f_start_plot_1 & frq < f_finish_plot_2;
-    semilogy(frq(valid_idx), abs(H1_tot.(field_names{i})(valid_idx)),LineWidth=1.5);
+    semilogy(frq(valid_idx), abs(H1_tot.(field_names{i})(valid_idx)), 'LineWidth',1.5, 'Color',colors(i,:));
 end
 legend(legend_entries, 'Location', 'best');
 
 % Fase
-nexttile;
-hold on; grid on; grid minor;
+nexttile; hold on; grid on; grid minor;
 title('Fase FRF - Banda Completa');
-xlabel('Frequenza [Hz]');
-ylabel('Fase [rad]');
+xlabel('Frequenza [Hz]'); ylabel('Fase [rad]');
 for i = 1:length(field_names)
     valid_idx = frq > f_start_plot_1 & frq < f_finish_plot_2;
-    plot(frq(valid_idx), angle(H1_tot.(field_names{i})(valid_idx)));
+    plot(frq(valid_idx), angle(H1_tot.(field_names{i})(valid_idx)), 'Color',colors(i,:), 'LineWidth',1.5);
 end
 
 % Coerenza
-nexttile;
-hold on; grid on; grid minor;
+nexttile; hold on; grid on; grid minor;
 title('Coerenza - Banda Completa');
-xlabel('Frequenza [Hz]');
-ylabel('\gamma^2');
-ylim([0 1.05]);
+xlabel('Frequenza [Hz]'); ylabel('\gamma^2'); ylim([0 1.05]);
 for i = 1:length(field_names)
     valid_idx = frq > f_start_plot_1 & frq < f_finish_plot_2;
-    plot(frq(valid_idx), coherence_tot.(field_names{i})(valid_idx));
+    plot(frq(valid_idx), coherence_tot.(field_names{i})(valid_idx), 'Color',colors(i,:), 'LineWidth',1.5);
 end
+
 
 %% ========== ESPORTAZIONE FRF (TAGLIO A 600 Hz) IN FILE .mat SEPARATI ==========
 
