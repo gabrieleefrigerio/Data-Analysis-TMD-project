@@ -30,7 +30,7 @@ function [i_nat, G] = NaturalFrequencyComputation(dets, freq)
     % disp(freq(i_nat));
 
     % --- (Facoltativo) Plot del determinante e delle frequenze naturali ---
-    %{
+    
     figure, box on;
     semilogy(freq, abs(dets), '-b');  % Plotta il determinante in scala logaritmica
     hold on;
@@ -40,7 +40,7 @@ function [i_nat, G] = NaturalFrequencyComputation(dets, freq)
     xlabel('Frequenza [Hz]');
     title('Determinante della matrice H');
     plot(freq(i_nat), abs(dets(i_nat)), 'or');  % Evidenzia i minimi locali
-    %}
+    
 end
 
 

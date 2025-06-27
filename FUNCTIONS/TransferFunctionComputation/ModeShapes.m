@@ -42,37 +42,37 @@ function [x, modes_shapes] = ModeShapes(L, n_points, i_nat, omega, density, A, E
     % L'animazione qui sotto visualizza l'evoluzione temporale della deformazione modale
     % (Attualmente commentata, decommenta per attivarla)
     
-    % mode = 2;  % Seleziona il primo modo da animare
-    % freq = omega / (2*pi);  % Conversione da rad/s a Hz
-    % colors_p = lines(length(i_nat));  % Genera palette di colori
-    % 
-    % % Creazione della figura e preparazione al plot
-    % figure('Position', [100, 100, 1200, 500]); 
-    % hold on; grid on;
-    % title(['Animazione del modo ', num2str(mode)])
-    % plot(x, modes_shapes(mode,:), ':k', 'LineWidth', 2)  % Traccia forma modale fissa
-    % h1 = plot(x, zeros(size(x)), 'LineWidth', 2, 'color', colors_p(mode, :));  % Traccia la deformazione animata
-    % xlabel('Posizione [m]')
-    % ylabel('Deformazione (modale)')
-    % ylim([-1, 1] * max(abs(modes_shapes(mode,:))) * 1.1)  % Imposta i limiti dell’asse y
-    % 
-    % % Parametri animazione
-    % T = 1 / freq(i_nat(mode));   % Periodo del modo selezionato
-    % n_cycles = 4;                % Numero di cicli da visualizzare
-    % n_frames = 1000;             % Numero totale di frame
-    % t = linspace(0, n_cycles*T, n_frames);  % Vettore temporale
-    % 
-    % % Loop di animazione
-    % for k = 1:length(t)
-    %     if ishandle(h1)
-    %         % Aggiorna la deformata modale nel tempo
-    %         w1 = modes_shapes(mode,:) * cos(2*pi*freq(i_nat(mode)) * t(k));
-    %         h1.YData = w1;
-    %         pause(T/n_frames);  % Pausa per sincronizzare il frame rate
-    %     else
-    %         return  % Esce se la figura è chiusa
-    %     end
-    % end
+    mode = 2;  % Seleziona il primo modo da animare
+    freq = omega / (2*pi);  % Conversione da rad/s a Hz
+    colors_p = lines(length(i_nat));  % Genera palette di colori
+
+    % Creazione della figura e preparazione al plot
+    figure('Position', [100, 100, 1200, 500]); 
+    hold on; grid on;
+    title(['Animazione del modo ', num2str(mode)])
+    plot(x, modes_shapes(mode,:), ':k', 'LineWidth', 2)  % Traccia forma modale fissa
+    h1 = plot(x, zeros(size(x)), 'LineWidth', 2, 'color', colors_p(mode, :));  % Traccia la deformazione animata
+    xlabel('Posizione [m]')
+    ylabel('Deformazione (modale)')
+    ylim([-1, 1] * max(abs(modes_shapes(mode,:))) * 1.1)  % Imposta i limiti dell’asse y
+
+    % Parametri animazione
+    T = 1 / freq(i_nat(mode));   % Periodo del modo selezionato
+    n_cycles = 4;                % Numero di cicli da visualizzare
+    n_frames = 1000;             % Numero totale di frame
+    t = linspace(0, n_cycles*T, n_frames);  % Vettore temporale
+
+    % Loop di animazione
+    for k = 1:length(t)
+        if ishandle(h1)
+            % Aggiorna la deformata modale nel tempo
+            w1 = modes_shapes(mode,:) * cos(2*pi*freq(i_nat(mode)) * t(k));
+            h1.YData = w1;
+            pause(T/n_frames);  % Pausa per sincronizzare il frame rate
+        else
+            return  % Esce se la figura è chiusa
+        end
+    end
 end
 
 
